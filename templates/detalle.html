@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto mt-10">
+    <div class="flex justify-between items-center border-b pb-4 mb-4">
+        <h2 class="text-2xl font-bold text-gray-800">Detalle del Pedido #{{ pedido.id_pedido }}</h2>
+        <a href="{{ url_for('reportes') }}" class="text-blue-600 hover:underline">← Volver a reportes</a>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+        <p><strong>Cliente:</strong> {{ pedido.cliente.nombre }}</p>
+        <p><strong>Fecha:</strong> {{ pedido.fecha.strftime('%d/%m/%Y') }}</p>
+        <p><strong>Dirección:</strong> {{ pedido.cliente.direccion }}</p>
+        <p><strong>Teléfono:</strong> {{ pedido.cliente.telefono }}</p>
+    </div>
+
+    <table class="w-full text-left border-collapse border border-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-4 py-2 border">Tamaño</th>
+                <th class="px-4 py-2 border">Ingredientes</th>
+                <th class="px-4 py-2 border">Cantidad</th>
+                <th class="px-4 py-2 border">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in detalles %}
+            <tr>
+                <td class="px-4 py-2 border">{{ d.tamano }}</td>
+                <td class="px-4 py-2 border">{{ d.ingredientes }}</td>
+                <td class="px-4 py-2 border text-center">{{ d.cantidad }}</td>
+                <td class="px-4 py-2 border text-right font-semibold">${{ d.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot class="bg-gray-100">
+            <tr>
+                <td colspan="3" class="px-4 py-2 border text-right font-bold uppercase">Total del pedido:</td>
+                <td class="px-4 py-2 border text-right font-bold text-lg text-blue-700">${{ pedido.total }}</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+{% endblock %}

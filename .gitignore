@@ -1,0 +1,20 @@
+# Entorno Virtual
+venv/
+ENV/
+env/
+
+# Python (archivos temporales)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Variables de entorno (donde guardas tus llaves secretas)
+.env
+
+# Archivos de configuración de IDEs
+.vscode/
+.idea/
+
+# Base de datos local (si usaras SQLite, por ejemplo)
+*.db
+*.sqlite3
