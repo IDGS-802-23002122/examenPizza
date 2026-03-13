@@ -36,6 +36,7 @@ def index():
         subtotal = (p_base + p_ing) * form.num_pizzas.data
         
         nueva_pizza = {
+            'cliente': form.nombre.data,
             'tamano_nombre': precios_tamano[form.tamano.data],
             'ingredientes_nombres': ", ".join([nombres_ing[i] for i in form.ingredientes.data]),
             'cantidad': form.num_pizzas.data,

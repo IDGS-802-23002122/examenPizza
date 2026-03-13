@@ -43,60 +43,65 @@
                     </thead>
                     <tbody class="bg-gray-300">
                         {% if pizzas_agregadas %}
-                            {% for pizza in pizzas_agregadas %}
-                            <tr class="border-b border-gray-400 text-gray-800">
-                                <td class="px-4 py-2 border-r border-gray-500">{{ pizza.tamano_nombre }}</td>
-                                <td class="px-4 py-2 border-r border-gray-500">{{ pizza.ingredientes_nombres }}</td>
-                                <td class="px-4 py-2 border-r border-gray-500 text-center">{{ pizza.cantidad }}</td>
-                                <td class="px-4 py-2 border-r border-gray-500">${{ pizza.subtotal }}</td>
-                                <td class="px-4 py-2 text-center">
-                                    <form action="{{ url_for('quitar_pizza', index=loop.index0) }}" method="POST">
-                                        <button type="submit" class="text-red-600 hover:text-red-800 font-bold">X</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
+                        {% for pizza in pizzas_agregadas %}
+                        <tr class="border-b border-gray-400 text-gray-800">
+                            <td class="px-4 py-2 border-r border-gray-500">{{ pizza.tamano_nombre }}</td>
+                            <td class="px-4 py-2 border-r border-gray-500">{{ pizza.ingredientes_nombres }}</td>
+                            <td class="px-4 py-2 border-r border-gray-500 text-center">{{ pizza.cantidad }}</td>
+                            <td class="px-4 py-2 border-r border-gray-500">${{ pizza.subtotal }}</td>
+                            <td class="px-4 py-2 text-center">
+                                <form action="{{ url_for('quitar_pizza', index=loop.index0) }}" method="POST">
+                                    <button type="submit" class="text-red-600 hover:text-red-800 font-bold">X</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
                         {% else %}
-                            <tr>
-                                <td class="px-4 py-2 border-r border-gray-500">*</td>
-                                <td class="px-4 py-2 border-r border-gray-500"></td>
-                                <td class="px-4 py-2 border-r border-gray-500"></td>
-                                <td class="px-4 py-2 border-r border-gray-500"></td>
-                                <td class="px-4 py-2"></td>
-                            </tr>
+                        <tr>
+                            <td class="px-4 py-2 border-r border-gray-500">*</td>
+                            <td class="px-4 py-2 border-r border-gray-500"></td>
+                            <td class="px-4 py-2 border-r border-gray-500"></td>
+                            <td class="px-4 py-2 border-r border-gray-500"></td>
+                            <td class="px-4 py-2"></td>
+                        </tr>
                         {% endif %}
                     </tbody>
                 </table>
             </div>
             <div class="flex justify-end mt-4">
                 <form action="{{ url_for('terminar') }}" method="POST">
-                    <button type="submit" class="bg-gray-200 border border-gray-500 px-8 py-1 rounded hover:bg-white transition-colors">
-                        Terminar 
+                    <button type="submit"
+                        class="bg-gray-200 border border-gray-500 px-8 py-1 rounded hover:bg-white transition-colors">
+                        Terminar
                     </button>
                 </form>
             </div>
         </div>
 
-        <div class="bg-gray-400 p-8 rounded border border-gray-600 flex flex-col items-center justify-center shadow-inner">
+        <div
+            class="bg-gray-400 p-8 rounded border border-gray-600 flex flex-col items-center justify-center shadow-inner">
             <h3 class="text-2xl font-bold mb-6 underline uppercase">Ventas del día</h3>
-            
+
             <div class="text-xl space-y-2 text-left w-full px-10 text-gray-900">
                 {% set total_acumulado = namespace(valor=0) %}
-                
+
                 {% if pizzas_agregadas %}
-                    {% for pizza in pizzas_agregadas %}
-                        <p class="font-medium">{{ form.nombre.data }} total <span class="font-bold">${{ pizza.subtotal }}</span></p>
-                        {% set total_acumulado.valor = total_acumulado.valor + pizza.subtotal %}
-                    {% endfor %}
+                {% for pizza in pizzas_agregadas %}
+                <p class="font-medium">
+                    {{ pizza.cliente }} total <span class="font-bold">${{ pizza.subtotal }}</span>
+                </p>
+                {% set total_acumulado.valor = total_acumulado.valor + pizza.subtotal %}
+                {% endfor %}
                 {% endif %}
-                
+
                 <hr class="border-gray-600 my-4">
                 <p class="font-bold text-2xl mt-4">
                     Ventas totales del día: ${{ total_acumulado.valor }}
                 </p>
             </div>
 
-            <a href="{{ url_for('reportes') }}" class="mt-8 bg-gray-200 border border-gray-500 px-4 py-1 rounded hover:bg-white transition-colors">
+            <a href="{{ url_for('reportes') }}"
+                class="mt-8 bg-gray-200 border border-gray-500 px-4 py-1 rounded hover:bg-white transition-colors">
                 Ventas totales por día
             </a>
         </div>
