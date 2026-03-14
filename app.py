@@ -54,7 +54,6 @@ def index():
     return render_template('index.html', form=form, pizzas_agregadas=session['pizzas_agregadas'])
 
 
-
 @app.route('/terminar', methods=['POST'])
 def terminar():
     pizzas = session.get('pizzas_agregadas', [])
@@ -63,6 +62,23 @@ def terminar():
         return redirect(url_for('index'))
 
     try:
+        fecha_sesion = session.get('fecha_pedido')
+        fecha_final = None
+
+        if fecha_sesion:
+            if isinstance(fecha_sesion, str):
+                try:
+                    fecha_final = datetime.strptime(fecha_sesion, '%a, %d %b %Y %H:%M:%S %Z').date()
+                except ValueError:
+                    try:
+                        fecha_final = datetime.strptime(fecha_sesion[:10], '%Y-%m-%d').date()
+                    except ValueError:
+                        fecha_final = datetime.utcnow().date()
+            else:
+                fecha_final = fecha_sesion
+        else:
+            fecha_final = datetime.utcnow().date()
+
         nuevo_cliente = Cliente(
             nombre=session.get('cliente_nombre'),
             direccion=session.get('cliente_direccion'),
@@ -74,7 +90,7 @@ def terminar():
         total_venta = sum(p['subtotal'] for p in pizzas)
         nuevo_pedido = Pedido(
             id_cliente=nuevo_cliente.id_cliente,
-            fecha=session.get('fecha_pedido'),
+            fecha=fecha_final, 
             total=total_venta
         )
         db.session.add(nuevo_pedido)
@@ -93,10 +109,11 @@ def terminar():
         db.session.commit()
         session.clear() 
         flash(f"Venta guardada con éxito por ${total_venta}", "success")
+        
     except Exception as e:
         db.session.rollback()
         flash(f"Error en BD: {str(e)}", "danger")
-        print(e)
+        print(f"Error detallado: {e}")
 
     return redirect(url_for('index'))
 
@@ -114,15 +131,18 @@ def quitar_pizza(index):
 @app.route('/reportes', methods=['GET', 'POST'])
 def reportes():
     ventas = []
+    fecha_seleccionada = None
 
     if request.method == 'POST':
+        fecha_str = request.form.get('fecha') 
 
-        fecha = request.form.get('fecha')
+        if fecha_str:
+            fecha_objeto = datetime.strptime(fecha_str, '%Y-%m-%d').date()
+            
+            ventas = Pedido.query.filter(Pedido.fecha == fecha_objeto).all()
+            fecha_seleccionada = fecha_str
 
-        if fecha:
-            ventas = Pedido.query.filter(Pedido.fecha == fecha).all()
-
-    return render_template('reportes.html', ventas=ventas)
+    return render_template('reportes.html', ventas=ventas, fecha_seleccionada=fecha_seleccionada)
 
 @app.route('/detalle_pedido/<int:id>')
 def detalle_pedido(id):

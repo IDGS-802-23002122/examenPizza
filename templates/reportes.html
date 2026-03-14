@@ -11,7 +11,7 @@
                 Selecciona la fecha que deseas consultar:
             </label>
 
-            <input type="date" name="fecha" class="w-full p-2 border rounded mb-4">
+            <input type="date" name="fecha" value="{{ fecha_seleccionada }}" class="w-full p-2 border rounded mb-4">
 
             <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
                 Buscar ventas
@@ -46,7 +46,7 @@
                 {% else %}
                 <tr>
                     <td colspan="4" class="px-4 py-8 text-center text-gray-500 italic">
-                        No se encontraron ventas para este criterio. Escribe el día en minúsculas (ej. jueves).
+                        No se encontraron ventas para este criterio. 
                     </td>
                 </tr>
                 {% endfor %}
