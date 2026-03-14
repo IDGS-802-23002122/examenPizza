@@ -16,3 +16,8 @@ pip list
 
 # Instalación de dependencias (forma 2) 
 pip install flask flask-sqlalchemy flask-wtf pymysql cryptography email-validator
+
+# Creacion entorno virtual 
+python -m venv venv (solo la primera vez)
+# Para activarlo
+cd venv/Scripts/activate

@@ -4,54 +4,56 @@
 <div class="bg-white p-8 rounded-lg shadow-lg">
     <h2 class="text-2xl font-bold mb-6 text-gray-800">Reporte de Ventas</h2>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 gap-8">
         <form method="POST" class="p-4 border rounded bg-gray-50">
-            <label class="block mb-2 font-bold text-gray-700">Consulta por día:</label>
-            <input type="text" name="dia" placeholder="Ej. lunes" class="w-full p-2 border rounded mb-4">
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Buscar</button>
-        </form>
 
-        <form method="POST" class="p-4 border rounded bg-gray-50">
-            <label class="block mb-2 font-bold text-gray-700">Consulta por mes:</label>
-            <input type="text" name="mes" placeholder="Ej. marzo" class="w-full p-2 border rounded mb-4">
-            <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">Buscar</button>
+            <label class="block mb-2 font-bold text-gray-700">
+                Selecciona la fecha que deseas consultar:
+            </label>
+
+            <input type="date" name="fecha" class="w-full p-2 border rounded mb-4">
+
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+                Buscar ventas
+            </button>
+
         </form>
     </div>
 
     <div class="mt-10 overflow-x-auto">
         <table class="w-full text-left border-collapse">
-    <thead>
-        <tr class="bg-gray-100 uppercase text-xs font-bold text-gray-600">
-            <th class="px-4 py-3 border-b">Cliente</th>
-            <th class="px-4 py-3 border-b">Fecha</th>
-            <th class="px-4 py-3 border-b">Total</th>
-            <th class="px-4 py-3 border-b">Acciones</th>
-        </tr>
-    </thead>
-    <tbody class="bg-white">
-        {% for pedido in ventas %}
-        <tr class="border-b hover:bg-gray-50">
-            <td class="px-4 py-3">{{ pedido.cliente.nombre }}</td>
-            <td class="px-4 py-3">{{ pedido.fecha.strftime('%d/%m/%Y') }}</td>
-            <td class="px-4 py-3 font-semibold text-green-700">${{ pedido.total }}</td>
-            <td class="px-4 py-3">
-                <a href="{{ url_for('detalle_pedido', id=pedido.id_pedido) }}" 
-                   class="text-blue-500 hover:underline text-sm">
-                   Ver Detalle
-                </a>
-            </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="4" class="px-4 py-8 text-center text-gray-500 italic">
-                No se encontraron ventas para este criterio. Escribe el día en minúsculas (ej. jueves).
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            <thead>
+                <tr class="bg-gray-100 uppercase text-xs font-bold text-gray-600">
+                    <th class="px-4 py-3 border-b">Cliente</th>
+                    <th class="px-4 py-3 border-b">Fecha</th>
+                    <th class="px-4 py-3 border-b">Total</th>
+                    <th class="px-4 py-3 border-b">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white">
+                {% for pedido in ventas %}
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-3">{{ pedido.cliente.nombre }}</td>
+                    <td class="px-4 py-3">{{ pedido.fecha.strftime('%d/%m/%Y') }}</td>
+                    <td class="px-4 py-3 font-semibold text-green-700">${{ pedido.total }}</td>
+                    <td class="px-4 py-3">
+                        <a href="{{ url_for('detalle_pedido', id=pedido.id_pedido) }}"
+                            class="text-blue-500 hover:underline text-sm">
+                            Ver Detalle
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="px-4 py-8 text-center text-gray-500 italic">
+                        No se encontraron ventas para este criterio. Escribe el día en minúsculas (ej. jueves).
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    
+
     <div class="mt-6">
         <a href="{{ url_for('index') }}" class="text-blue-600 hover:underline">← Regresar al registro</a>
     </div>

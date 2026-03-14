@@ -28,6 +28,7 @@ def index():
         session['cliente_nombre'] = form.nombre.data
         session['cliente_direccion'] = form.direccion.data
         session['cliente_telefono'] = form.telefono.data
+        session['fecha_pedido'] = form.fecha.data
         precios_tamano = {'40': 'Chica', '80': 'Mediana', '120': 'Grande'}
         nombres_ing = {'10': 'Jamón', '10': 'Piña', '10': 'Champiñones'} 
         
@@ -73,7 +74,7 @@ def terminar():
         total_venta = sum(p['subtotal'] for p in pizzas)
         nuevo_pedido = Pedido(
             id_cliente=nuevo_cliente.id_cliente,
-            fecha=datetime.now().date(),
+            fecha=session.get('fecha_pedido'),
             total=total_venta
         )
         db.session.add(nuevo_pedido)
@@ -113,28 +114,13 @@ def quitar_pizza(index):
 @app.route('/reportes', methods=['GET', 'POST'])
 def reportes():
     ventas = []
-    # Diccionarios de traducción para que el usuario pueda escribir en español
-    dias_es_en = {
-        'lunes': 'Monday', 'martes': 'Tuesday', 'miercoles': 'Wednesday',
-        'jueves': 'Thursday', 'viernes': 'Friday', 'sabado': 'Saturday', 'domingo': 'Sunday'
-    }
-    meses_es_en = {
-        'enero': 'January', 'febrero': 'February', 'marzo': 'March', 'abril': 'April',
-        'mayo': 'May', 'junio': 'June', 'julio': 'July', 'agosto': 'August',
-        'septiembre': 'September', 'octubre': 'October', 'noviembre': 'November', 'diciembre': 'December'
-    }
 
     if request.method == 'POST':
-        busqueda_dia = request.form.get('dia', '').lower().strip()
-        busqueda_mes = request.form.get('mes', '').lower().strip()
 
-        if busqueda_dia in dias_es_en:
-            dia_ingles = dias_es_en[busqueda_dia]
-            ventas = Pedido.query.filter(db.func.dayname(Pedido.fecha) == dia_ingles).all()
-        
-        elif busqueda_mes in meses_es_en:
-            mes_ingles = meses_es_en[busqueda_mes]
-            ventas = Pedido.query.filter(db.func.monthname(Pedido.fecha) == mes_ingles).all()
+        fecha = request.form.get('fecha')
+
+        if fecha:
+            ventas = Pedido.query.filter(Pedido.fecha == fecha).all()
 
     return render_template('reportes.html', ventas=ventas)
 

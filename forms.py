@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, RadioField, SelectMultipleField, widgets
+from wtforms import StringField, IntegerField, RadioField, SelectMultipleField, widgets, DateField
 from wtforms.validators import DataRequired, NumberRange, Length, Regexp 
 
 class MultiCheckboxField(SelectMultipleField):
@@ -15,6 +15,7 @@ class PizzeriaForm(FlaskForm):
         Regexp(r'^[0-9]+$', message="El teléfono solo debe contener números"),
         Length(min=10, max=10, message="El teléfono debe tener exactamente 10 dígitos")
     ])
+    fecha = DateField('Fecha', format='%Y-%m-%d', validators=[DataRequired()])
     
     tamano = RadioField('Tamaño Pizza', choices=[
         ('40', 'Chica $40'),
